@@ -1,1 +1,1 @@
-worker: python thebegin_bot.py
+web: python thebegin_bot.py
