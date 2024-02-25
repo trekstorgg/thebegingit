@@ -7,6 +7,7 @@ from fuzzywuzzy import fuzz
 import logging
 
 logging.basicConfig(
+    filename='/app/bot.log',  # Путь к файлу логов
     level=logging.ERROR,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
@@ -34,17 +35,4 @@ def what_are_you_doing(update: Update, context: CallbackContext):
     context.bot.send_message(update.message.chat_id, 'Я занят общением с вами! Чем могу помочь?')
 
 def main():
-    persistence = PicklePersistence('/app/conversation_data.pkl')
-    updater = Updater(TOKEN, use_context=True, persistence=persistence)
-    dp = updater.dispatcher
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", help_command))
-
-    dp.add_handler(MessageHandler(Filters.regex(r'как дела\??') | Filters.regex(r'как дила\??'), how_are_you))
-    dp.add_handler(MessageHandler(Filters.regex(r'что ты делаешь\??'), what_are_you_doing))
-
-    updater.start_polling()
-    updater.idle()
-
-if __name__ == '__main__':
-    main()
+    persistence = PickleP
