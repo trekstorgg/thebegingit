@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 from telegram import Update
 from telegram.ext import PicklePersistence, Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from fuzzywuzzy import fuzz
@@ -13,7 +14,10 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 
-TOKEN = '6819081129:AAGpDpi1c4UP4Duis0JGsK2vamaEcLg0b5Q'
+TOKEN = os.environ.get('YOUR_TELEGRAM_TOKEN')
+if TOKEN is None:
+    print("Не найден токен бота. Убедитесь, что переменная окружения YOUR_TELEGRAM_TOKEN установлена.")
+    sys.exit(1)
 
 def start(update: Update, context: CallbackContext):
     context.bot.send_message(update.message.chat_id, 'Привет, малюск')
@@ -41,7 +45,8 @@ def main():
 
     # Добавленные строки
     PORT = int(os.environ.get('PORT', 5000))
-    updater.start_polling(port=PORT)
+    updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
+    updater.bot.setWebhook(f"https://fierce-anchorage-81100-390a3927338e.herokuapp.com/{TOKEN}")
 
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("start", start))
